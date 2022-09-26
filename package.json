@@ -1,0 +1,46 @@
+{
+  "name": "vue3-image-viewer",
+  "version": "0.1.0",
+  "private": false,
+  "description": "基于vue3的图片查看器",
+  "main": "lib/index.min.js",
+  "module": "lib/index.esm.js",
+  "typings": "lib/index.d.ts",
+  "keyword": "vue3 vant",
+  "license": "MIT",
+  "author": {
+    "name": "lhc92",
+    "email": "lhc92@gmail.com"
+  },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
+    "build": "yarn build:clean && yarn build:lib && yarn build:esm-bundle && rimraf lib/demo.html",
+    "build:clean": "rimraf lib",
+    "build:lib": "vue-cli-service build --target lib --name index --dest lib packages/index.ts",
+    "build:esm-bundle": "rollup --config ./build/rollup.config.js"
+  },
+  "dependencies": {
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^9.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "prettier": "^2.4.1",
+    "sass": "^1.32.7",
+    "sass-loader": "^12.0.0",
+    "typescript": "~4.5.5"
+  }
+}
