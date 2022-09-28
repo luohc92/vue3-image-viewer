@@ -1,27 +1,67 @@
 <template>
   <transition name="viewer-fade">
-    <div tabindex="-1" class="tmd-image-viewer__wrapper" :style="`z-index:${zIndex}`" v-show="visible">
-      <div class="tmd-image-viewer__mask" :style="`background-color:${maskBgColor};`" @click="handleTapClose"></div>
-      <span class="tmd-image-viewer__btn tmd-image-viewer__close" @click="close">
+    <div
+      v-show="visible"
+      tabindex="-1"
+      class="tmd-image-viewer__wrapper"
+      :style="`z-index:${zIndex}`"
+    >
+      <div
+        class="tmd-image-viewer__mask"
+        :style="`background-color:${maskBgColor};`"
+        @click="handleTapClose"
+      ></div>
+      <span
+        class="tmd-image-viewer__btn tmd-image-viewer__close"
+        @click="close"
+      >
         <i class="iconfont icon-close"></i>
       </span>
-      <span v-if="images && images.length > 1" class="tmd-image-viewer__btn tmd-image-viewer__pre" @click="pre">
+      <span
+        v-if="images && images.length > 1"
+        class="tmd-image-viewer__btn tmd-image-viewer__pre"
+        @click="pre"
+      >
         <i class="iconfont icon-arrow-left"></i>
       </span>
-      <span v-if="images && images.length > 1" class="tmd-image-viewer__btn tmd-image-viewer__next" @click="next">
+      <span
+        v-if="images && images.length > 1"
+        class="tmd-image-viewer__btn tmd-image-viewer__next"
+        @click="next"
+      >
         <i class="iconfont icon-arrow-right"></i>
       </span>
       <div class="tmd-image-viewer__image">
-        <img :src="images[curIndex]" :style="imgStyle" @mousedown="handleMouseDown" v-show="images && images.length > 0 && images[curIndex]" />
+        <img
+          :src="images[curIndex]"
+          :style="imgStyle"
+          @mousedown="handleMouseDown"
+          v-show="images && images.length > 0 && images[curIndex]"
+        />
       </div>
       <div class="tmd-image-viewer__actions" :style="actionStyle">
         <div class="tmd-image-viewer_actions__inner">
-          <span class="iconfont icon-zoom-out" @click="handleActions('zoomOut')"></span>
-          <span class="iconfont icon-zoom-in" @click="handleActions('zoomIn')"></span>
+          <span
+            class="iconfont icon-zoom-out"
+            @click="handleActions('zoomOut')"
+          ></span>
+          <span
+            class="iconfont icon-zoom-in"
+            @click="handleActions('zoomIn')"
+          ></span>
           <span class="tmd-image-viewer__actions__divider"></span>
-          <span class="iconfont icon-refresh-left" @click="handleActions('anticlockwise')"></span>
-          <span class="iconfont icon-refresh-right" @click="handleActions('clockwise')"></span>
-          <span class="iconfont icon-mirror" @click="handleActions('mirror')"></span>
+          <span
+            class="iconfont icon-refresh-left"
+            @click="handleActions('anticlockwise')"
+          ></span>
+          <span
+            class="iconfont icon-refresh-right"
+            @click="handleActions('clockwise')"
+          ></span>
+          <span
+            class="iconfont icon-mirror"
+            @click="handleActions('mirror')"
+          ></span>
           <span class="tmd-image-viewer__actions__divider"></span>
           <span class="iconfont" :class="mode.icon" @click="toggleMode"></span>
           <template v-if="showDownload">
@@ -34,7 +74,12 @@
         <div
           class="tmd-image-viewer__thumbnail"
           ref="thumbnailRef"
-          v-show="thumbnailTransitionShow && showThumbnail && images && images.length > 1"
+          v-show="
+            thumbnailTransitionShow &&
+            showThumbnail &&
+            images &&
+            images.length > 1
+          "
           @mouseenter="mouseEnterThumbnail(true)"
           @mouseleave="mouseEnterThumbnail(false)"
         >
@@ -49,318 +94,358 @@
           </div>
         </div>
       </transition>
-      <span class="tmd-image-viewer__sequence" :style="sequenceStyle" v-show="!showThumbnail"> {{ curIndex + 1 }} / {{ images.length }} </span>
+      <span
+        class="tmd-image-viewer__sequence"
+        :style="sequenceStyle"
+        v-show="!showThumbnail"
+      >
+        {{ curIndex + 1 }} / {{ images.length }}
+      </span>
     </div>
   </transition>
 </template>
-<script setup lang="ts">
-import { toRefs, nextTick, onMounted, reactive, ref, PropType, defineProps, defineEmits } from 'vue';
-import './assets/iconfont.css';
-import { on, off, isFirefox, rafThrottle } from './util';
-import { computed } from '@vue/reactivity';
-const props = defineProps({
-  curIndex: {
-    type: Number,
-    default: 0,
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  PropType,
+  reactive,
+  ref,
+  toRefs,
+} from "vue";
+import { isFirefox, off, on, rafThrottle } from "./util";
+import "./assets/iconfont.css";
+export default defineComponent({
+  name: "ImageViewer",
+  props: {
+    curIndex: {
+      type: Number,
+      default: 0,
+    },
+    images: {
+      type: Array as PropType<string[]>,
+      default: [] as string[],
+    },
+    showDownload: {
+      type: Boolean,
+      default: false,
+    },
+    showThumbnail: {
+      type: Boolean,
+      default: false,
+    },
+    handlePosition: {
+      type: String,
+      default: "bottom",
+    },
+    onClose: {
+      type: Function,
+      default: () => {},
+    },
+    onDownload: {
+      type: Function,
+      default: (e: string) => {},
+    },
+    zIndex: {
+      type: Number,
+      default: 2000,
+    },
+    maskBgColor: {
+      type: String,
+      default: "rgba(0,0,0,0.5)",
+    },
   },
-  images: {
-    type: Array as PropType<string[]>,
-    default: [] as string[],
-  },
-  showDownload: {
-    type: Boolean,
-    default: false,
-  },
-  showThumbnail: {
-    type: Boolean,
-    default: false,
-  },
-  handlePosition: {
-    type: String,
-    default: 'bottom',
-  },
-  onClose: {
-    type: Function,
-    default: () => {},
-  },
-  onDownload: {
-    type: Function,
-    default: (e: string) => {},
-  },
-  zIndex: {
-    type: Number,
-    default: 2000,
-  },
-  maskBgColor: {
-    type: String,
-    default: 'rgba(0,0,0,0.5)',
-  },
-});
-const emits = defineEmits(['destroy']);
-const Mode = {
-  CONTAIN: {
-    name: 'contain',
-    icon: 'icon-full-screen',
-  },
-  ORIGINAL: {
-    name: 'original',
-    icon: 'icon-c-scale-to-original',
-  },
-};
-const mousewheelEventName = isFirefox() ? 'DOMMouseScroll' : 'mousewheel';
-const state = reactive({
-  mode: Mode.CONTAIN,
-  visible: false,
-  curIndex: 0,
-  isMouseEnterThumbnail: false,
-  thumbnailTransitionShow: false,
-  transform: {
-    scale: 1,
-    deg: 0,
-    rotateY: 0,
-    offsetX: 0,
-    offsetY: 0,
-    enableTransition: false,
-  },
-  _dragHandler: () => {},
-  _keyDownHandler: (e: KeyboardEvent) => {},
-  _mouseWheelHandler: () => {},
-});
-const thumbnailRef = ref();
-const isFirst = computed(() => state.curIndex === 0);
-const isLast = computed(() => state.curIndex === props.images.length - 1);
-const sequenceStyle = computed(() => {
-  if (props.handlePosition == 'bottom') {
-    return {
-      top: '10px',
-      bottom: 'auto',
+  emits: ["destroy"],
+  setup(props, { emit }) {
+    const Mode = {
+      CONTAIN: {
+        name: "contain",
+        icon: "icon-full-screen",
+      },
+      ORIGINAL: {
+        name: "original",
+        icon: "icon-c-scale-to-original",
+      },
     };
-  }
-  return {
-    bottom: '10px',
-    top: 'auto',
-  };
-});
-const actionStyle = computed(() => {
-  if (props.handlePosition == 'bottom') {
-    return {
-      bottom: props.showThumbnail && props.images && props.images.length > 1 ? '100px' : '30px',
-      top: 'auto',
+    const mousewheelEventName = isFirefox() ? "DOMMouseScroll" : "mousewheel";
+    const state = reactive({
+      mode: Mode.CONTAIN,
+      visible: false,
+      curIndex: 0,
+      isMouseEnterThumbnail: false,
+      thumbnailTransitionShow: false,
+      transform: {
+        scale: 1,
+        deg: 0,
+        rotateY: 0,
+        offsetX: 0,
+        offsetY: 0,
+        enableTransition: false,
+      },
+      dragHandler: () => {},
+      keyDownHandler: (e: KeyboardEvent) => {},
+      mouseWheelHandler: () => {},
+    });
+    const thumbnailRef = ref();
+    const sequenceStyle = computed(() => {
+      if (props.handlePosition == "bottom") {
+        return {
+          top: "10px",
+          bottom: "auto",
+        };
+      }
+      return {
+        bottom: "10px",
+        top: "auto",
+      };
+    });
+    const actionStyle = computed(() => {
+      if (props.handlePosition == "bottom") {
+        return {
+          bottom:
+            props.showThumbnail && props.images && props.images.length > 1
+              ? "100px"
+              : "30px",
+          top: "auto",
+        };
+      }
+      return {
+        top: "30px",
+        bottom: "auto",
+      };
+    });
+    const imgStyle = computed(() => {
+      const { scale, deg, rotateY, offsetX, offsetY, enableTransition } =
+        state.transform;
+      const style = {
+        transform: `scale(${scale}) rotate(${deg}deg) rotateY(${rotateY}deg)`,
+        transition: enableTransition ? "transform .3s" : "",
+        "margin-left": `${offsetX}px`,
+        "margin-top": `${offsetY}px`,
+        maxWidth: "",
+        maxHeight: "",
+      };
+      if (state.mode.name === Mode.CONTAIN.name) {
+        style.maxWidth = style.maxHeight = "100%";
+      }
+      return style;
+    });
+    const isFirst = computed(() => state.curIndex === 0);
+    const isLast = computed(() => state.curIndex === props.images.length - 1);
+    const mouseEnterThumbnail = (e: boolean) => {
+      state.isMouseEnterThumbnail = e;
     };
-  }
-  return {
-    top: '30px',
-    bottom: 'auto',
-  };
-});
-const imgStyle = computed(() => {
-  const { scale, deg, rotateY, offsetX, offsetY, enableTransition } = state.transform;
-  const style = {
-    transform: `scale(${scale}) rotate(${deg}deg) rotateY(${rotateY}deg)`,
-    transition: enableTransition ? 'transform .3s' : '',
-    'margin-left': `${offsetX}px`,
-    'margin-top': `${offsetY}px`,
-    maxWidth: '',
-    maxHeight: '',
-  };
-  if (state.mode.name === Mode.CONTAIN.name) {
-    style.maxWidth = style.maxHeight = '100%';
-  }
-  return style;
-});
-const mouseEnterThumbnail = (e: boolean) => {
-  state.isMouseEnterThumbnail = e;
-};
-const change = (index: number) => {
-  if (!props.showThumbnail) {
-    return;
-  }
-  state.curIndex = index;
-  let vmEl = thumbnailRef.value;
-  if (!vmEl) return;
-  let width = vmEl.clientWidth;
-  let scrollLeft = vmEl.scrollLeft;
-  let cur = vmEl.children[index].offsetLeft;
-  if (width - cur < 160) {
-    if (width - cur < 0 && scrollLeft === 0) {
-      vmEl.scrollLeft = cur - width + 160;
-    } else {
-      vmEl.scrollLeft = scrollLeft + 80;
-    }
-  } else if (cur - scrollLeft < 80) {
-    vmEl.scrollLeft = cur - 120;
-  }
-};
-const pre = () => {
-  if (isFirst.value) return;
-  const len = props.images.length;
-  state.curIndex = (state.curIndex - 1 + len) % len;
-  change(state.curIndex);
-};
-const next = () => {
-  if (isLast.value) return;
-  const len = props.images.length;
-  state.curIndex = (state.curIndex + 1) % len;
-  change(state.curIndex);
-};
-const handleMouseDown = (e: MouseEvent) => {
-  if (e.button !== 0) return;
-  const { offsetX, offsetY } = state.transform;
-  const startX = e.pageX;
-  const startY = e.pageY;
-  state._dragHandler = rafThrottle((ev: MouseEvent) => {
-    state.transform.offsetX = offsetX + ev.pageX - startX;
-    state.transform.offsetY = offsetY + ev.pageY - startY;
-  });
-  on(document, 'mousemove', state._dragHandler);
-  on(document, 'mouseup', () => {
-    off(document, 'mousemove', state._dragHandler);
-  });
-  e.preventDefault();
-};
-const deviceSupportInstall = () => {
-  state._keyDownHandler = (e: KeyboardEvent) => {
-    e.preventDefault();
-    const keyCode = e.keyCode;
-    switch (keyCode) {
-      case 17:
-        handleActions('mirror');
-        break;
-      case 18:
-        handleActions('clockwise');
-        break;
-      // ESC
-      case 27:
-        close();
-        break;
-      // SPACE
-      case 32:
-        toggleMode();
-        break;
-      // LEFT_ARROW
-      case 37:
-        pre();
-        break;
-      // UP_ARROW
-      case 38:
-        handleActions('zoomIn');
-        break;
-      // RIGHT_ARROW
-      case 39:
-        next();
-        break;
-      // DOWN_ARROW
-      case 40:
-        handleActions('zoomOut');
-        break;
-    }
-  };
-  state._mouseWheelHandler = rafThrottle((e: any) => {
-    const delta = e.wheelDelta ? e.wheelDelta : -e.detail;
-    if (state.isMouseEnterThumbnail) {
-      let moveForwardStep = -1;
-      let moveBackStep = 1;
-      let step = 0;
-      step = delta > 0 ? moveForwardStep * 50 : moveBackStep * 50;
-      if (thumbnailRef.value) {
-        thumbnailRef.value.scrollLeft = thumbnailRef.value.scrollLeft + step;
+    const change = (index: number) => {
+      if (!props.showThumbnail) {
+        return;
       }
-    } else {
-      if (delta > 0) {
-        handleActions('zoomIn', {
-          zoomRate: 0.015,
-          enableTransition: false,
-        });
-      } else {
-        handleActions('zoomOut', {
-          zoomRate: 0.015,
-          enableTransition: false,
-        });
+      state.curIndex = index;
+      let vmEl = thumbnailRef.value;
+      if (!vmEl) return;
+      let width = vmEl.clientWidth;
+      let scrollLeft = vmEl.scrollLeft;
+      let cur = vmEl.children[index].offsetLeft;
+      if (width - cur < 160) {
+        if (width - cur < 0 && scrollLeft === 0) {
+          vmEl.scrollLeft = cur - width + 160;
+        } else {
+          vmEl.scrollLeft = scrollLeft + 80;
+        }
+      } else if (cur - scrollLeft < 80) {
+        vmEl.scrollLeft = cur - 120;
       }
-    }
-  });
-  on(document, 'keydown', state._keyDownHandler);
-  on(document, mousewheelEventName, state._mouseWheelHandler);
-};
-const deviceSupportUninstall = () => {
-  off(document, 'keydown', state._keyDownHandler);
-  off(document, mousewheelEventName, state._mouseWheelHandler);
-  state._keyDownHandler = (e: KeyboardEvent) => {};
-  state._mouseWheelHandler = () => {};
-};
-const reset = () => {
-  state.transform = {
-    scale: 1,
-    deg: 0,
-    rotateY: 0,
-    offsetX: 0,
-    offsetY: 0,
-    enableTransition: false,
-  };
-};
-const toggleMode = () => {
-  const modeNames = Object.keys(Mode);
-  const modeValues = Object.values(Mode);
-  const index = modeValues.findIndex((e) => e.name == state.mode.name);
-  const nextIndex = (index + 1) % modeNames.length;
-  state.mode = modeValues[nextIndex];
-  console.log(state.mode);
-  reset();
-};
-const handleActions = (action: any, options = {}) => {
-  const { zoomRate, rotateDeg, enableTransition } = {
-    zoomRate: 0.2,
-    rotateDeg: 90,
-    enableTransition: true,
-    ...options,
-  };
-  const { transform } = state;
-  switch (action) {
-    case 'zoomOut':
-      if (transform.scale > 0.2) {
-        transform.scale = parseFloat((transform.scale - zoomRate).toFixed(3));
+    };
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button !== 0) return;
+      const { offsetX, offsetY } = state.transform;
+      const startX = e.pageX;
+      const startY = e.pageY;
+      state.dragHandler = rafThrottle((ev: MouseEvent) => {
+        state.transform.offsetX = offsetX + ev.pageX - startX;
+        state.transform.offsetY = offsetY + ev.pageY - startY;
+      });
+      on(document, "mousemove", state.dragHandler);
+      on(document, "mouseup", () => {
+        off(document, "mousemove", state.dragHandler);
+      });
+      e.preventDefault();
+    };
+    const pre = () => {
+      if (isFirst.value) return;
+      const len = props.images.length;
+      state.curIndex = (state.curIndex - 1 + len) % len;
+      change(state.curIndex);
+    };
+    const next = () => {
+      if (isLast.value) return;
+      const len = props.images.length;
+      state.curIndex = (state.curIndex + 1) % len;
+      change(state.curIndex);
+    };
+    const deviceSupportInstall = () => {
+      state.keyDownHandler = (e: KeyboardEvent) => {
+        e.preventDefault();
+        const keyCode = e.keyCode;
+        switch (keyCode) {
+          case 17:
+            handleActions("mirror");
+            break;
+          case 18:
+            handleActions("clockwise");
+            break;
+          // ESC
+          case 27:
+            close();
+            break;
+          // SPACE
+          case 32:
+            toggleMode();
+            break;
+          // LEFT_ARROW
+          case 37:
+            pre();
+            break;
+          // UP_ARROW
+          case 38:
+            handleActions("zoomIn");
+            break;
+          // RIGHT_ARROW
+          case 39:
+            next();
+            break;
+          // DOWN_ARROW
+          case 40:
+            handleActions("zoomOut");
+            break;
+        }
+      };
+      state.mouseWheelHandler = rafThrottle((e: any) => {
+        const delta = e.wheelDelta ? e.wheelDelta : -e.detail;
+        if (state.isMouseEnterThumbnail) {
+          let moveForwardStep = -1;
+          let moveBackStep = 1;
+          let step = 0;
+          step = delta > 0 ? moveForwardStep * 50 : moveBackStep * 50;
+          if (thumbnailRef.value) {
+            thumbnailRef.value.scrollLeft =
+              thumbnailRef.value.scrollLeft + step;
+          }
+        } else {
+          if (delta > 0) {
+            handleActions("zoomIn", {
+              zoomRate: 0.015,
+              enableTransition: false,
+            });
+          } else {
+            handleActions("zoomOut", {
+              zoomRate: 0.015,
+              enableTransition: false,
+            });
+          }
+        }
+      });
+      on(document, "keydown", state.keyDownHandler);
+      on(document, mousewheelEventName, state.mouseWheelHandler);
+    };
+    const deviceSupportUninstall = () => {
+      off(document, "keydown", state.keyDownHandler);
+      off(document, mousewheelEventName, state.mouseWheelHandler);
+      state.keyDownHandler = (e: KeyboardEvent) => {};
+      state.mouseWheelHandler = () => {};
+    };
+    const handleActions = (action: any, options = {}) => {
+      const { zoomRate, rotateDeg, enableTransition } = {
+        zoomRate: 0.2,
+        rotateDeg: 90,
+        enableTransition: true,
+        ...options,
+      };
+      const { transform } = state;
+      switch (action) {
+        case "zoomOut":
+          if (transform.scale > 0.2) {
+            transform.scale = parseFloat(
+              (transform.scale - zoomRate).toFixed(3)
+            );
+          }
+          break;
+        case "zoomIn":
+          transform.scale = parseFloat((transform.scale + zoomRate).toFixed(3));
+          break;
+        case "clockwise":
+          transform.deg += rotateDeg;
+          break;
+        case "anticlockwise":
+          transform.deg -= rotateDeg;
+          break;
+        case "mirror":
+          transform.rotateY += 180;
+          break;
       }
-      break;
-    case 'zoomIn':
-      transform.scale = parseFloat((transform.scale + zoomRate).toFixed(3));
-      break;
-    case 'clockwise':
-      transform.deg += rotateDeg;
-      break;
-    case 'anticlockwise':
-      transform.deg -= rotateDeg;
-      break;
-    case 'mirror':
-      transform.rotateY += 180;
-      break;
-  }
-  transform.enableTransition = enableTransition;
-};
-const handleTapClose = () => {
-  close();
-};
-const download = () => {
-  props.onDownload(props.images[state.curIndex]);
-};
-const close = () => {
-  emits('destroy');
-  props.onClose();
-  deviceSupportUninstall();
-  state.visible = false;
-  state.thumbnailTransitionShow = false;
-};
-onMounted(() => {
-  state.curIndex = props.curIndex;
-  deviceSupportInstall();
-  state.visible = true;
-  nextTick(() => {
-    state.thumbnailTransitionShow = true;
-  });
+      transform.enableTransition = enableTransition;
+    };
+    const reset = () => {
+      state.transform = {
+        scale: 1,
+        deg: 0,
+        rotateY: 0,
+        offsetX: 0,
+        offsetY: 0,
+        enableTransition: false,
+      };
+    };
+    const toggleMode = () => {
+      const modeNames = Object.keys(Mode);
+      const modeValues = Object.values(Mode);
+      const index = modeValues.findIndex((e) => e.name == state.mode.name);
+      const nextIndex = (index + 1) % modeNames.length;
+      state.mode = modeValues[nextIndex];
+      reset();
+    };
+    const download = () => {
+      props.onDownload(props.images[state.curIndex]);
+    };
+    const handleTapClose = () => {
+      close();
+    };
+    const close = () => {
+      emit("destroy");
+      props.onClose();
+      deviceSupportUninstall();
+      state.visible = false;
+      state.thumbnailTransitionShow = false;
+    };
+    onMounted(() => {
+      state.curIndex = props.curIndex;
+      deviceSupportInstall();
+      state.visible = true;
+      nextTick(() => {
+        state.thumbnailTransitionShow = true;
+      });
+    });
+    return {
+      ...toRefs(state),
+      close,
+      handleTapClose,
+      pre,
+      next,
+      thumbnailRef,
+      imgStyle,
+      handleMouseDown,
+      sequenceStyle,
+      actionStyle,
+      handleActions,
+      download,
+      toggleMode,
+      change,
+      mouseEnterThumbnail,
+    };
+  },
 });
-const { mode, visible, curIndex, thumbnailTransitionShow } = toRefs(state);
 </script>
-
-<style scoped>
+<style>
 .tmd-image-viewer__wrapper {
   position: fixed;
   top: 0;

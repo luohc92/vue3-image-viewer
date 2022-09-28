@@ -1,48 +1,29 @@
-import { createVNode } from '@vue/runtime-core';
-import { render } from '@vue/runtime-dom';
-import imageViewerCpt from './imageViewer.vue';
-interface ImageViewerOptionsDto {
-  curIndex: number;
-  images: string[];
-  showDownload: boolean;
-  showThumbnail: boolean;
-  handlePosition: 'top' | 'bottom';
-  onClose: () => void;
-  onDownload: (url: string) => void;
-  zIndex: number;
-  maskBgColor: string;
-}
-
+import imageViewerCpt from "./imageVIewer.vue";
+import { createVNode, render, ComponentPublicInstance } from "vue";
+import { ImageViewerOptionsDto } from "./types";
 const defaultOptions: ImageViewerOptionsDto = {
   curIndex: 0,
   images: [],
   showDownload: false,
   showThumbnail: false,
-  handlePosition: 'bottom',
+  handlePosition: "bottom",
   onClose: Function,
   onDownload: Function,
   zIndex: 2000,
-  maskBgColor: 'rgba(0,0,0,0.5)',
+  maskBgColor: "rgba(0,0,0,0.5)",
 };
-let container: HTMLDivElement | null;
-const imageViewer = (options: ImageViewerOptionsDto) => {
-  if (container) {
-    document.body.removeChild(container);
-  }
-  container = document.createElement('div');
-  container.className = 'tmd-image-viewer-container';
+const imageViewer = (options: any) => {
+  const container = document.createElement("div");
+  container.className = "tmd-image-viewer-container";
   const opts = {
     ...defaultOptions,
     ...options,
   };
   const vm = createVNode(imageViewerCpt, opts);
-  if (vm.props) {
+  if (vm && vm.props) {
     vm.props.onDestroy = () => {
       setTimeout(() => {
-        if (container) {
-          render(null, container);
-          container = null;
-        }
+        render(null, container);
       }, 300);
     };
   }

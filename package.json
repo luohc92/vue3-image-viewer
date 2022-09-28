@@ -1,46 +1,53 @@
 {
-  "name": "vue3-image-viewer",
-  "version": "0.1.0",
-  "private": false,
-  "description": "基于vue3的图片查看器",
-  "main": "lib/index.min.js",
-  "module": "lib/index.esm.js",
-  "typings": "lib/index.d.ts",
-  "keyword": "vue3 vant",
+  "name": "@luohc92/vue3-image-viewer",
+  "description": "a image viewer for vue3.0 一款vue3.0的图片查看器",
+  "keyword": "vue vue3.0 image-viewer image",
   "license": "MIT",
-  "author": {
-    "name": "lhc92",
-    "email": "lhc92@gmail.com"
+  "author": "luohc92",
+  "private": false,
+  "version": "1.0.0",
+  "type": "module",
+  "files": [
+    "package.json",
+    "README.md",
+    "LICENSE",
+    "dist"
+  ],
+  "module": "./dist/vue3-image-viewer.es.ts",
+  "main": "./dist/vue3-image-viewer.umd.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue3-image-viewer.es.ts",
+      "require": "./dist/vue3-image-viewer.umd.ts"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luohc92/vue3-image-viewer.git"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "build": "yarn build:clean && yarn build:lib && yarn build:esm-bundle && rimraf lib/demo.html",
-    "build:clean": "rimraf lib",
-    "build:lib": "vue-cli-service build --target lib --name index --dest lib packages/index.ts",
-    "build:esm-bundle": "rollup --config ./build/rollup.config.js"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.4.0",
-    "@typescript-eslint/parser": "^5.4.0",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-typescript": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "@vue/eslint-config-prettier": "^7.0.0",
-    "@vue/eslint-config-typescript": "^9.1.0",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "prettier": "^2.4.1",
-    "sass": "^1.32.7",
-    "sass-loader": "^12.0.0",
-    "typescript": "~4.5.5"
+    "@types/node": "^18.7.23",
+    "@vitejs/plugin-vue": "^3.1.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0",
+    "vite-plugin-dts": "^1.5.0",
+    "vue-tsc": "^0.40.4"
   }
 }
