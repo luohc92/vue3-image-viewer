@@ -115,7 +115,7 @@ import {
   ref,
   toRefs,
 } from "vue";
-import { isFirefox, off, on, rafThrottle } from "./util";
+import { downImage, isFirefox, off, on, rafThrottle } from "./util";
 import "./assets/iconfont.css";
 export default defineComponent({
   name: "ImageViewer",
@@ -142,11 +142,11 @@ export default defineComponent({
     },
     onClose: {
       type: Function,
-      default: () => {},
+      default: Function,
     },
     onDownload: {
       type: Function,
-      default: (e: string) => {},
+      default: Function,
     },
     zIndex: {
       type: Number,
@@ -157,8 +157,7 @@ export default defineComponent({
       default: "rgba(0,0,0,0.5)",
     },
   },
-  emits: ["destroy"],
-  setup(props, { emit }) {
+  setup(props) {
     const Mode = {
       CONTAIN: {
         name: "contain",
@@ -405,14 +404,14 @@ export default defineComponent({
       reset();
     };
     const download = () => {
-      props.onDownload(props.images[state.curIndex]);
+      downImage(props.images[state.curIndex]);
+      props.onDownload?.(props.images[state.curIndex]);
     };
     const handleTapClose = () => {
       close();
     };
     const close = () => {
-      emit("destroy");
-      props.onClose();
+      props.onClose?.();
       deviceSupportUninstall();
       state.visible = false;
       state.thumbnailTransitionShow = false;

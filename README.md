@@ -1,8 +1,10 @@
 # vue3-image-viewer
 
 A image viewer for vue3.x
+
 一款vue3.0的图片查看器
-vue2.x版 [vue3-image-viewer](https://github.com/luohc92/vue-image-viewer)
+
+vue2.x版 [vue-image-viewer](https://github.com/luohc92/vue-image-viewer)
 
 ## Install 安装
 
