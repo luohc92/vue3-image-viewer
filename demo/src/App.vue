@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="280px" :inline="false" style="margin-top: 50px;">
+  <el-form label-width="280px" :inline="false" style="margin-top: 50px">
     <el-form-item label="showDownload（显示下载按钮）">
       <el-checkbox v-model="showDownload" />
     </el-form-item>
@@ -25,7 +25,7 @@ import { ElMessage } from "element-plus";
 import { ref } from "vue";
 const showDownload = ref(false);
 const showThumbnail = ref(false);
-const handlePosition = ref("bottom");
+const handlePosition = ref<"bottom" | "top">("bottom");
 const maskBgColor = ref("rgba(0,0,0,0.7)");
 const images = [
   "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
