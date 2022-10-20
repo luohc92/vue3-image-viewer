@@ -468,6 +468,7 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: -webkit-grab;
   cursor: grab;
 }
 
@@ -476,11 +477,25 @@ export default defineComponent({
 }
 
 .viewer-fade-enter-active {
+  -webkit-animation: viewer-fade-in 0.3s;
   animation: viewer-fade-in 0.3s;
 }
 
 .viewer-fade-leave-active {
+  -webkit-animation: viewer-fade-out 0.3s;
   animation: viewer-fade-out 0.3s;
+}
+
+@-webkit-keyframes viewer-fade-in {
+  0% {
+    transform: translate3d(0, -20px, 0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
 }
 
 @keyframes viewer-fade-in {
@@ -492,6 +507,18 @@ export default defineComponent({
   100% {
     transform: translate3d(0, 0, 0);
     opacity: 1;
+  }
+}
+
+@-webkit-keyframes viewer-fade-out {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(0, -20px, 0);
+    opacity: 0;
   }
 }
 
@@ -508,11 +535,25 @@ export default defineComponent({
 }
 
 .thumbnail-fade-enter-active {
+  -webkit-animation: thumbnail-fade-in 0.5s;
   animation: thumbnail-fade-in 0.5s;
 }
 
 .thumbnail-fade-leave-active {
+  -webkit-animation: thumbnail-fade-out 0.5s;
   animation: thumbnail-fade-out 0.5s;
+}
+
+@-webkit-keyframes thumbnail-fade-in {
+  0% {
+    transform: translateX(-50%) translateY(80px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(-50%) translateY(0px);
+    opacity: 1;
+  }
 }
 
 @keyframes thumbnail-fade-in {
@@ -524,6 +565,18 @@ export default defineComponent({
   100% {
     transform: translateX(-50%) translateY(0px);
     opacity: 1;
+  }
+}
+
+@-webkit-keyframes thumbnail-fade-out {
+  0% {
+    transform: translateX(-50%) translateY(0px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-50%) translateY(80px);
+    opacity: 0;
   }
 }
 
@@ -546,6 +599,9 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   color: #ffffff;
   left: 50%;
@@ -561,6 +617,9 @@ export default defineComponent({
   justify-content: center;
   cursor: pointer;
   box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   left: 50%;
   top: 30px;
@@ -568,9 +627,10 @@ export default defineComponent({
   height: 44px;
   padding: 0 23px;
   background-color: #222222;
-  opacity: 0.8;
   border-color: #fff;
   border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
 }
 
 .tmd-image-viewer_actions__inner {
@@ -602,9 +662,13 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  opacity: 0.8;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
   cursor: pointer;
   box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
