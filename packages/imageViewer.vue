@@ -626,7 +626,7 @@ export default defineComponent({
   transform: translateX(-50%);
   height: 44px;
   padding: 0 23px;
-  background-color: #222222;
+  background-color: rgba(34, 34, 34, 0.8);
   border-color: #fff;
   border-radius: 8px;
   -moz-border-radius: 8px;
@@ -679,7 +679,7 @@ export default defineComponent({
   height: 40px;
   font-size: 24px;
   color: #fff;
-  background-color: #606266;
+  background-color: rgba(96, 98, 102, 0.8);
 }
 
 .tmd-image-viewer__next,
@@ -690,7 +690,7 @@ export default defineComponent({
   height: 44px;
   font-size: 24px;
   color: #fff;
-  background-color: #606266;
+  background-color: rgba(96, 98, 102, 0.8);
   border-color: #fff;
 }
 
