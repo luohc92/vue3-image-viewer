@@ -10,6 +10,15 @@
       <el-radio v-model="handlePosition" label="bottom">bottom 底部</el-radio>
       <el-radio v-model="handlePosition" label="top">top 顶部</el-radio>
     </el-form-item>
+    <el-form-item label="zoomRate（缩放比例）">
+      <el-input-number v-model="zoomRate" :min="1" :max="10" :step="0.1" />
+    </el-form-item>
+    <el-form-item label="minScale（最小缩放比例）">
+      <el-input-number v-model="minScale" :min="0.1" :max="1" :step="0.1" />
+    </el-form-item>
+    <el-form-item label="maxScale（最大缩放比例）">
+      <el-input-number v-model="maxScale" :min="1" :max="20" :step="1" />
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="handleTapImage"> Click Me 点击 </el-button>
     </el-form-item>
@@ -23,6 +32,9 @@ import { ElMessage } from "element-plus";
 import { ref } from "vue";
 const showDownload = ref(false);
 const showThumbnail = ref(false);
+const zoomRate = ref(1.2);
+const minScale = ref(0.2);
+const maxScale = ref(5);
 const handlePosition = ref<"bottom" | "top">("bottom");
 const maskBgColor = ref("rgba(0,0,0,0.7)");
 const images = [
@@ -36,9 +48,9 @@ const handleTapImage = async () => {
     showThumbnail: showThumbnail.value,
     showDownload: showDownload.value,
     handlePosition: handlePosition.value,
-    zoomRate: 1.2,
-    minScale: 0.2,
-    maxScale: 5,
+    zoomRate: zoomRate.value,
+    minScale: minScale.value,
+    maxScale: maxScale.value,
     onClose: () => {
       ElMessage.info("close");
     },
