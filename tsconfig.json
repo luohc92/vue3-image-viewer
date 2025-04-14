@@ -11,6 +11,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
+    "types": ["vue"],
     "skipLibCheck": true
   },
   "include": [

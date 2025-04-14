@@ -11,9 +11,7 @@
       <el-radio v-model="handlePosition" label="top">top 顶部</el-radio>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="handleTapImage">
-        Click Me 点击
-      </el-button>
+      <el-button type="primary" @click="handleTapImage"> Click Me 点击 </el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -38,6 +36,9 @@ const handleTapImage = async () => {
     showThumbnail: showThumbnail.value,
     showDownload: showDownload.value,
     handlePosition: handlePosition.value,
+    zoomRate: 1.2,
+    minScale: 0.2,
+    maxScale: 5,
     onClose: () => {
       ElMessage.info("close");
     },

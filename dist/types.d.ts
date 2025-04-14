@@ -8,4 +8,7 @@ export interface ImageViewerOptionsDto {
     onDownload?: (url: string) => void;
     zIndex?: number;
     maskBgColor?: string;
+    zoomRate?: number;
+    minScale?: number;
+    maxScale?: number;
 }

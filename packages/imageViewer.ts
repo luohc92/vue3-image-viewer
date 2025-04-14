@@ -1,4 +1,4 @@
-import imageViewerCpt from "./imageVIewer.vue";
+import imageViewerCpt from "./imageViewer.vue";
 import { createVNode, render } from "vue";
 import { ImageViewerOptionsDto } from "./types";
 const defaultOptions: ImageViewerOptionsDto = {
@@ -11,6 +11,9 @@ const defaultOptions: ImageViewerOptionsDto = {
   onDownload: Function,
   zIndex: 2000,
   maskBgColor: "rgba(0,0,0,0.5)",
+  zoomRate: 1.2,
+  minScale: 0.2,
+  maxScale: 5,
 };
 const imageViewer = (options: ImageViewerOptionsDto) => {
   const container = document.createElement("div");

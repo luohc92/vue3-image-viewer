@@ -1,34 +1,14 @@
 <template>
   <transition name="viewer-fade">
-    <div
-      v-show="visible"
-      tabindex="-1"
-      class="tmd-image-viewer__wrapper"
-      :style="`z-index:${zIndex}`"
-    >
-      <div
-        class="tmd-image-viewer__mask"
-        :style="`background-color:${maskBgColor};`"
-        @click="handleTapClose"
-      ></div>
-      <span
-        class="tmd-image-viewer__btn tmd-image-viewer__close"
-        @click="close"
-      >
+    <div v-show="visible" tabindex="-1" class="tmd-image-viewer__wrapper" :style="`z-index:${zIndex}`">
+      <div class="tmd-image-viewer__mask" :style="`background-color:${maskBgColor};`" @click="handleTapClose"></div>
+      <span class="tmd-image-viewer__btn tmd-image-viewer__close" @click="close">
         <i class="iconfont icon-close"></i>
       </span>
-      <span
-        v-if="images && images.length > 1"
-        class="tmd-image-viewer__btn tmd-image-viewer__pre"
-        @click="pre"
-      >
+      <span v-if="images && images.length > 1" class="tmd-image-viewer__btn tmd-image-viewer__pre" @click="pre">
         <i class="iconfont icon-arrow-left"></i>
       </span>
-      <span
-        v-if="images && images.length > 1"
-        class="tmd-image-viewer__btn tmd-image-viewer__next"
-        @click="next"
-      >
+      <span v-if="images && images.length > 1" class="tmd-image-viewer__btn tmd-image-viewer__next" @click="next">
         <i class="iconfont icon-arrow-right"></i>
       </span>
       <div class="tmd-image-viewer__image">
@@ -41,27 +21,12 @@
       </div>
       <div class="tmd-image-viewer__actions" :style="actionStyle">
         <div class="tmd-image-viewer_actions__inner">
-          <span
-            class="iconfont icon-zoom-out"
-            @click="handleActions('zoomOut')"
-          ></span>
-          <span
-            class="iconfont icon-zoom-in"
-            @click="handleActions('zoomIn')"
-          ></span>
+          <span class="iconfont icon-zoom-out" @click="handleActions('zoomOut')"></span>
+          <span class="iconfont icon-zoom-in" @click="handleActions('zoomIn')"></span>
           <span class="tmd-image-viewer__actions__divider"></span>
-          <span
-            class="iconfont icon-refresh-left"
-            @click="handleActions('anticlockwise')"
-          ></span>
-          <span
-            class="iconfont icon-refresh-right"
-            @click="handleActions('clockwise')"
-          ></span>
-          <span
-            class="iconfont icon-mirror"
-            @click="handleActions('mirror')"
-          ></span>
+          <span class="iconfont icon-refresh-left" @click="handleActions('anticlockwise')"></span>
+          <span class="iconfont icon-refresh-right" @click="handleActions('clockwise')"></span>
+          <span class="iconfont icon-mirror" @click="handleActions('mirror')"></span>
           <span class="tmd-image-viewer__actions__divider"></span>
           <span class="iconfont" :class="mode.icon" @click="toggleMode"></span>
           <template v-if="showDownload">
@@ -74,12 +39,7 @@
         <div
           class="tmd-image-viewer__thumbnail"
           ref="thumbnailRef"
-          v-show="
-            thumbnailTransitionShow &&
-            showThumbnail &&
-            images &&
-            images.length > 1
-          "
+          v-show="thumbnailTransitionShow && showThumbnail && images && images.length > 1"
           @mouseenter="mouseEnterThumbnail(true)"
           @mouseleave="mouseEnterThumbnail(false)"
         >
@@ -94,27 +54,14 @@
           </div>
         </div>
       </transition>
-      <span
-        class="tmd-image-viewer__sequence"
-        :style="sequenceStyle"
-        v-show="!showThumbnail"
-      >
+      <span class="tmd-image-viewer__sequence" :style="sequenceStyle" v-show="!showThumbnail">
         {{ curIndex + 1 }} / {{ images.length }}
       </span>
     </div>
   </transition>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onMounted,
-  PropType,
-  reactive,
-  ref,
-  toRefs,
-} from "vue";
+import { computed, defineComponent, nextTick, onMounted, PropType, reactive, ref, toRefs } from "vue";
 import { downImage, isFirefox, off, on, rafThrottle } from "./util";
 import "./assets/iconfont.css";
 export default defineComponent({
@@ -155,6 +102,18 @@ export default defineComponent({
     maskBgColor: {
       type: String,
       default: "rgba(0,0,0,0.5)",
+    },
+    zoomRate: {
+      type: Number,
+      default: 0.2,
+    },
+    minScale: {
+      type: Number,
+      default: 0.2,
+    },
+    maxScale: {
+      type: Number,
+      default: 3,
     },
   },
   setup(props) {
@@ -203,10 +162,7 @@ export default defineComponent({
     const actionStyle = computed(() => {
       if (props.handlePosition == "bottom") {
         return {
-          bottom:
-            props.showThumbnail && props.images && props.images.length > 1
-              ? "100px"
-              : "30px",
+          bottom: props.showThumbnail && props.images && props.images.length > 1 ? "100px" : "30px",
           top: "auto",
         };
       }
@@ -216,8 +172,7 @@ export default defineComponent({
       };
     });
     const imgStyle = computed(() => {
-      const { scale, deg, rotateY, offsetX, offsetY, enableTransition } =
-        state.transform;
+      const { scale, deg, rotateY, offsetX, offsetY, enableTransition } = state.transform;
       const style = {
         transform: `scale(${scale}) rotate(${deg}deg) rotateY(${rotateY}deg)`,
         transition: enableTransition ? "transform .3s" : "",
@@ -328,18 +283,17 @@ export default defineComponent({
           let step = 0;
           step = delta > 0 ? moveForwardStep * 50 : moveBackStep * 50;
           if (thumbnailRef.value) {
-            thumbnailRef.value.scrollLeft =
-              thumbnailRef.value.scrollLeft + step;
+            thumbnailRef.value.scrollLeft = thumbnailRef.value.scrollLeft + step;
           }
         } else {
           if (delta > 0) {
             handleActions("zoomIn", {
-              zoomRate: 0.015,
+              zoomRate: props.zoomRate,
               enableTransition: false,
             });
           } else {
             handleActions("zoomOut", {
-              zoomRate: 0.015,
+              zoomRate: props.zoomRate,
               enableTransition: false,
             });
           }
@@ -356,7 +310,7 @@ export default defineComponent({
     };
     const handleActions = (action: any, options = {}) => {
       const { zoomRate, rotateDeg, enableTransition } = {
-        zoomRate: 0.2,
+        zoomRate: props.zoomRate,
         rotateDeg: 90,
         enableTransition: true,
         ...options,
@@ -364,14 +318,16 @@ export default defineComponent({
       const { transform } = state;
       switch (action) {
         case "zoomOut":
-          if (transform.scale > 0.2) {
-            transform.scale = parseFloat(
-              (transform.scale - zoomRate).toFixed(3)
-            );
+          if (transform.scale > props.minScale) {
+            const scale = parseFloat((transform.scale / zoomRate).toFixed(3));
+            transform.scale = scale < props.minScale ? props.minScale : scale;
           }
           break;
         case "zoomIn":
-          transform.scale = parseFloat((transform.scale + zoomRate).toFixed(3));
+          if (transform.scale < props.maxScale) {
+            const scale = parseFloat((transform.scale * zoomRate).toFixed(3));
+            transform.scale = scale > props.maxScale ? props.maxScale : scale;
+          }
           break;
         case "clockwise":
           transform.deg += rotateDeg;
@@ -411,12 +367,14 @@ export default defineComponent({
       close();
     };
     const close = () => {
+      document.body.style.overflow = "";
       props.onClose?.();
       deviceSupportUninstall();
       state.visible = false;
       state.thumbnailTransitionShow = false;
     };
     onMounted(() => {
+      document.body.style.overflow = "hidden";
       state.curIndex = props.curIndex;
       deviceSupportInstall();
       state.visible = true;
