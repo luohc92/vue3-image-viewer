@@ -19,6 +19,9 @@
     <el-form-item label="maxScale（最大缩放比例）">
       <el-input-number v-model="maxScale" :min="1" :max="20" :step="1" />
     </el-form-item>
+    <el-form-item label="closeOnClickMask（点击遮罩是否关闭）">
+      <el-checkbox v-model="closeOnClickMask" />
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="handleTapImage"> Click Me 点击 </el-button>
     </el-form-item>
@@ -32,6 +35,7 @@ import { ElMessage } from "element-plus";
 import { ref } from "vue";
 const showDownload = ref(false);
 const showThumbnail = ref(false);
+const closeOnClickMask = ref(true);
 const zoomRate = ref(1.2);
 const minScale = ref(0.2);
 const maxScale = ref(5);
@@ -51,6 +55,7 @@ const handleTapImage = async () => {
     zoomRate: zoomRate.value,
     minScale: minScale.value,
     maxScale: maxScale.value,
+    closeOnClickMask: closeOnClickMask.value,
     onClose: () => {
       ElMessage.info("close");
     },

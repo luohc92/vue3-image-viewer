@@ -3,6 +3,7 @@ export interface ImageViewerOptionsDto {
     images: string[];
     showDownload?: boolean;
     showThumbnail?: boolean;
+    closeOnClickMask?: boolean;
     handlePosition?: "top" | "bottom";
     onClose?: () => void;
     onDownload?: (url: string) => void;

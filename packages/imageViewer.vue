@@ -115,6 +115,10 @@ export default defineComponent({
       type: Number,
       default: 3,
     },
+    closeOnClickMask: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props) {
     const Mode = {
@@ -364,7 +368,7 @@ export default defineComponent({
       props.onDownload?.(props.images[state.curIndex]);
     };
     const handleTapClose = () => {
-      close();
+      if (props.closeOnClickMask) close();
     };
     const close = () => {
       document.body.style.overflow = "";

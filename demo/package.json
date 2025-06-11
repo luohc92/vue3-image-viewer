@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@luohc92/vue3-image-viewer": "^1.0.4",
+    "@luohc92/vue3-image-viewer": "^1.0.5",
     "element-plus": "^2.9.7",
     "vue": "^3.2.37"
   },

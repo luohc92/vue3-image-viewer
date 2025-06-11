@@ -1,18 +1,18 @@
-import { defineComponent as G, reactive as J, ref as K, computed as b, onMounted as Q, nextTick as Z, toRefs as ee, openBlock as v, createBlock as ne, Transition as A, withCtx as F, withDirectives as C, createElementVNode as i, normalizeStyle as k, createElementBlock as y, createCommentVNode as z, vShow as T, normalizeClass as L, Fragment as O, createVNode as B, renderList as oe, toDisplayString as R, render as Y } from "vue";
-const $ = typeof window > "u", p = function() {
-  return $ ? function(e, n, s) {
+import { defineComponent as G, reactive as J, ref as K, computed as b, onMounted as Q, nextTick as Z, toRefs as ee, openBlock as v, createBlock as ne, Transition as H, withCtx as A, withDirectives as I, createElementVNode as i, normalizeStyle as k, createElementBlock as y, createCommentVNode as z, vShow as T, normalizeClass as F, Fragment as L, createVNode as B, renderList as oe, toDisplayString as R, render as Y } from "vue";
+const M = typeof window > "u", p = function() {
+  return M ? function(e, n, s) {
     e && n && s && e.attachEvent("on" + n, s);
   } : function(e, n, s) {
     e && n && s && e.addEventListener(n, s, !1);
   };
 }(), E = function() {
-  return $ ? function(e, n, s) {
+  return M ? function(e, n, s) {
     e && n && e.detachEvent("on" + n, s);
   } : function(e, n, s) {
     e && n && e.removeEventListener(n, s, !1);
   };
 }(), te = function() {
-  return !$ && !!window.navigator.userAgent.match(/firefox/i);
+  return !M && !!window.navigator.userAgent.match(/firefox/i);
 };
 function _(e) {
   let n = !1;
@@ -29,8 +29,8 @@ function ae(e) {
     s.width = n.width, s.height = n.height;
     const o = s.getContext("2d");
     o == null || o.drawImage(n, 0, 0, n.width, n.height);
-    const u = s.toDataURL("image/png"), h = document.createElement("a"), a = new MouseEvent("click"), g = e.split("/"), I = g[g.length - 1];
-    h.download = I || "img", h.href = u, h.dispatchEvent(a);
+    const u = s.toDataURL("image/png"), h = document.createElement("a"), a = new MouseEvent("click"), g = e.split("/"), C = g[g.length - 1];
+    h.download = C || "img", h.href = u, h.dispatchEvent(a);
   }, n.src = e;
 }
 const se = G({
@@ -83,6 +83,10 @@ const se = G({
     maxScale: {
       type: Number,
       default: 3
+    },
+    closeOnClickMask: {
+      type: Boolean,
+      default: !0
     }
   },
   setup(e) {
@@ -137,7 +141,7 @@ const se = G({
         maxHeight: ""
       };
       return o.mode.name === n.CONTAIN.name && (f.maxWidth = f.maxHeight = "100%"), f;
-    }), I = b(() => o.curIndex === 0), V = b(() => o.curIndex === e.images.length - 1), W = (t) => {
+    }), C = b(() => o.curIndex === 0), V = b(() => o.curIndex === e.images.length - 1), W = (t) => {
       o.isMouseEnterThumbnail = t;
     }, S = (t) => {
       if (!e.showThumbnail)
@@ -157,12 +161,12 @@ const se = G({
       }), p(document, "mousemove", o.dragHandler), p(document, "mouseup", () => {
         E(document, "mousemove", o.dragHandler);
       }), t.preventDefault();
-    }, N = () => {
-      if (I.value)
+    }, $ = () => {
+      if (C.value)
         return;
       const t = e.images.length;
       o.curIndex = (o.curIndex - 1 + t) % t, S(o.curIndex);
-    }, M = () => {
+    }, N = () => {
       if (V.value)
         return;
       const t = e.images.length;
@@ -180,16 +184,16 @@ const se = G({
             D();
             break;
           case 32:
-            H();
+            O();
             break;
           case 37:
-            N();
+            $();
             break;
           case 38:
             w("zoomIn");
             break;
           case 39:
-            M();
+            N();
             break;
           case 40:
             w("zoomOut");
@@ -253,14 +257,14 @@ const se = G({
         offsetY: 0,
         enableTransition: !1
       };
-    }, H = () => {
+    }, O = () => {
       const t = Object.keys(n), l = Object.values(n), m = (l.findIndex((r) => r.name == o.mode.name) + 1) % t.length;
       o.mode = l[m], P();
     }, j = () => {
       var t;
       ae(e.images[o.curIndex]), (t = e.onDownload) == null || t.call(e, e.images[o.curIndex]);
     }, U = () => {
-      D();
+      e.closeOnClickMask && D();
     }, D = () => {
       var t;
       document.body.style.overflow = "", (t = e.onClose) == null || t.call(e), q(), o.visible = !1, o.thumbnailTransitionShow = !1;
@@ -273,8 +277,8 @@ const se = G({
       ...ee(o),
       close: D,
       handleTapClose: U,
-      pre: N,
-      next: M,
+      pre: $,
+      next: N,
       thumbnailRef: u,
       imgStyle: g,
       handleMouseDown: X,
@@ -282,7 +286,7 @@ const se = G({
       actionStyle: a,
       handleActions: w,
       download: j,
-      toggleMode: H,
+      toggleMode: O,
       change: S,
       mouseEnterThumbnail: W
     };
@@ -300,10 +304,10 @@ const ie = (e, n) => {
 ], ce = /* @__PURE__ */ i("i", { class: "iconfont icon-arrow-right" }, null, -1), ue = [
   ce
 ], fe = { class: "tmd-image-viewer__image" }, ge = ["src"], we = { class: "tmd-image-viewer_actions__inner" }, he = /* @__PURE__ */ i("span", { class: "tmd-image-viewer__actions__divider" }, null, -1), ve = /* @__PURE__ */ i("span", { class: "tmd-image-viewer__actions__divider" }, null, -1), be = /* @__PURE__ */ i("span", { class: "tmd-image-viewer__actions__divider" }, null, -1), ke = ["onClick"], ye = ["src"];
-function Ie(e, n, s, o, u, h) {
-  return v(), ne(A, { name: "viewer-fade" }, {
-    default: F(() => [
-      C(i("div", {
+function Ce(e, n, s, o, u, h) {
+  return v(), ne(H, { name: "viewer-fade" }, {
+    default: A(() => [
+      I(i("div", {
         tabindex: "-1",
         class: "tmd-image-viewer__wrapper",
         style: k(`z-index:${e.zIndex}`)
@@ -328,7 +332,7 @@ function Ie(e, n, s, o, u, h) {
           onClick: n[3] || (n[3] = (...a) => e.next && e.next(...a))
         }, ue)) : z("", !0),
         i("div", fe, [
-          C(i("img", {
+          I(i("img", {
             src: e.images[e.curIndex],
             style: k(e.imgStyle),
             onMousedown: n[4] || (n[4] = (...a) => e.handleMouseDown && e.handleMouseDown(...a))
@@ -364,10 +368,10 @@ function Ie(e, n, s, o, u, h) {
             }),
             ve,
             i("span", {
-              class: L(["iconfont", e.mode.icon]),
+              class: F(["iconfont", e.mode.icon]),
               onClick: n[10] || (n[10] = (...a) => e.toggleMode && e.toggleMode(...a))
             }, null, 2),
-            e.showDownload ? (v(), y(O, { key: 0 }, [
+            e.showDownload ? (v(), y(L, { key: 0 }, [
               be,
               i("span", {
                 class: "iconfont icon-download",
@@ -376,21 +380,21 @@ function Ie(e, n, s, o, u, h) {
             ], 64)) : z("", !0)
           ])
         ], 4),
-        B(A, {
+        B(H, {
           name: "thumbnail-fade",
           onAfterEnter: n[14] || (n[14] = (a) => e.change(e.curIndex))
         }, {
-          default: F(() => [
-            C(i("div", {
+          default: A(() => [
+            I(i("div", {
               class: "tmd-image-viewer__thumbnail",
               ref: "thumbnailRef",
               onMouseenter: n[12] || (n[12] = (a) => e.mouseEnterThumbnail(!0)),
               onMouseleave: n[13] || (n[13] = (a) => e.mouseEnterThumbnail(!1))
             }, [
-              (v(!0), y(O, null, oe(e.images, (a, g) => (v(), y("div", {
-                class: L(["tmd-image-viewer__thumbnail__inner", { current: e.curIndex === g }]),
+              (v(!0), y(L, null, oe(e.images, (a, g) => (v(), y("div", {
+                class: F(["tmd-image-viewer__thumbnail__inner", { current: e.curIndex === g }]),
                 key: a + "_thumbnail_" + g,
-                onClick: (I) => e.change(g)
+                onClick: (C) => e.change(g)
               }, [
                 i("img", { src: a }, null, 8, ye)
               ], 10, ke))), 128))
@@ -400,7 +404,7 @@ function Ie(e, n, s, o, u, h) {
           ]),
           _: 1
         }),
-        C(i("span", {
+        I(i("span", {
           class: "tmd-image-viewer__sequence",
           style: k(e.sequenceStyle)
         }, R(e.curIndex + 1) + " / " + R(e.images.length), 5), [
@@ -413,7 +417,7 @@ function Ie(e, n, s, o, u, h) {
     _: 1
   });
 }
-const Ce = /* @__PURE__ */ ie(se, [["render", Ie]]), Te = {
+const Ie = /* @__PURE__ */ ie(se, [["render", Ce]]), Te = {
   curIndex: 0,
   images: [],
   showDownload: !1,
@@ -423,6 +427,7 @@ const Ce = /* @__PURE__ */ ie(se, [["render", Ie]]), Te = {
   onDownload: Function,
   zIndex: 2e3,
   maskBgColor: "rgba(0,0,0,0.5)",
+  closeOnClickMask: !0,
   zoomRate: 1.2,
   minScale: 0.2,
   maxScale: 5
@@ -434,7 +439,7 @@ const Ce = /* @__PURE__ */ ie(se, [["render", Ie]]), Te = {
     ...e,
     onClose: e.onClose || null,
     onDownload: e.onDownload || null
-  }, o = B(Ce, s);
+  }, o = B(Ie, s);
   o && o.props && (o.props.onDestroy = () => {
     setTimeout(() => {
       Y(null, n);
